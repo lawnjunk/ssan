@@ -1,0 +1,17 @@
+{
+  "name": "ssan",
+  "version": "0.0.1",
+  "description": "A two function lib for uploading static websites and removing stale files for AWS S3.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.381.0",
+    "klaw": "^3.0.0",
+    "through2": "^3.0.0"
+  }
+}
