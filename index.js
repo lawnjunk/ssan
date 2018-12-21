@@ -13,18 +13,7 @@ if(!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY){
   process.exit(1)
 }
 
-const streamToPromise = (stream) => new Promise((resolve, reject) => {
-  stream.on("end", resolve(stream.dests[0].path));
-  stream.on("error", reject);
-})
-
-const uploadFile = (config) => s3.upload({
-  ACL: config.acl,
-  Bucket: config.bucket,
-  Key: path.relative(config.dir, config.filepath),
-  Body: fs.createReadStream(config.filepath),
-}).promise()
-
+// i didnt like through2's interface :}
 let transform = (cb) => {
   return through2.obj((f, _, next) => {
     cb(f, (err, data) => {
@@ -37,13 +26,13 @@ let transform = (cb) => {
 
 module.exports = {
   uploadStatic: (config) => {
-    if(!config.dir)
-      throw new Error('ERROR: no dir supplied')
-    if(!config.bucket) 
-      throw new Error('ERROR: no bucket name supplied')
-
     return klaw(config.dir)
     .pipe(transform((f, cb) => {
+      if(!config.dir)
+        return cb(new Error('ERROR: no dir supplied'))
+      if(!config.bucket) 
+        return cb(throw new Error('ERROR: no bucket name supplied'))
+
       // PASS FILES ON NO OTHER TYPES (DIR, PIPE, ECT)
       fs.lstat(f.path, (err, data) => {
         if(err) return cb(err)
@@ -71,16 +60,16 @@ module.exports = {
     // use filter to find "stale" objects on s3 that arenot in local dir
     // delete s3 obejcts
     
-    if(!config.dir)
-      throw new Error('ERROR: no dir supplied')
-    if(!config.bucket) 
-      throw new Error('ERROR: no bucket name supplied')
     function DeleteStaleStream(){
       Readable.call(this, {objectMode: true})
       this.start = true
     }
     util.inherits(DeleteStaleStream, Readable)
     DeleteStaleStream.prototype._read = function(){
+      if(!config.dir)
+        return this.emit('error', new Error('ERROR: no dir supplied'))
+      if(!config.bucket) 
+        return this.emit('error', throw new Error('ERROR: no bucket name supplied'))
       if(this.start){
         this.start = false
         let filepaths = {}
