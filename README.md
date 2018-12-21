@@ -26,6 +26,7 @@ uploadStatic({acl: 'public-read', bucket: 'example.bucket', dir: `${__dirname}/p
 * the `config` has the following options
   * `bucket` - the name of the S3 Bucket (Required)
   * `dir` - the path to the directory of static files to be diffed
+* **KNOWN LIMITATION** for now only suports first 1000 objects in s3 bucket
 ``` js
 deleteStale({bucket: 'example.bucket', dir: `${__dirname}/public`})
 .on('error', console.error)
