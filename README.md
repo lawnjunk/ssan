@@ -25,9 +25,7 @@ uploadStatic({acl: 'public-read', bucket: 'example.bucket', dir: `${__dirname}/p
 * it has the function signature `deleteStatic(configObject) -> readableStream`
 * the `config` has the following options
   * `bucket` - the name of the S3 Bucket (Required)
-  * `dir` - the path to the directory of static files to be uploaed
-  * `acl` - the ACL String for all of the s3 objects
-    * Values Include "private" "public-read" "public-read-write" "authenticated-read" "aws-exec-read" "bucket-owner-read" "bucket-owner-full-control"
+  * `dir` - the path to the directory of static files to be diffed
 ``` js
 deleteStale({bucket: 'example.bucket', dir: `${__dirname}/public`})
 .on('error', console.error)
