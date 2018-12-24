@@ -31,7 +31,7 @@ module.exports = {
       if(!config.dir)
         return cb(new Error('ERROR: no dir supplied'))
       if(!config.bucket) 
-        return cb(throw new Error('ERROR: no bucket name supplied'))
+        return cb(new Error('ERROR: no bucket name supplied'))
 
       // PASS FILES ON NO OTHER TYPES (DIR, PIPE, ECT)
       fs.lstat(f.path, (err, data) => {
@@ -69,7 +69,7 @@ module.exports = {
       if(!config.dir)
         return this.emit('error', new Error('ERROR: no dir supplied'))
       if(!config.bucket) 
-        return this.emit('error', throw new Error('ERROR: no bucket name supplied'))
+        return this.emit('error', new Error('ERROR: no bucket name supplied'))
       if(this.start){
         this.start = false
         let filepaths = {}
@@ -110,3 +110,7 @@ module.exports = {
     }))
   },
 }
+
+module.exports.uploadStatic({dir: process.env.DOT_ROOT, bucket: 'assets.slugbyte.com', acl: 'public read'})
+.on('data', console.log)
+.on('end', () => console.log('done'))
